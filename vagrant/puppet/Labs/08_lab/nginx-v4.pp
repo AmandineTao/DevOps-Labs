@@ -1,5 +1,5 @@
 $app     = "nginx"
-$version = "v3"
+$version = "v4"
 $content = "<h1>Hello world from ${app}-${version}.pp for devops formation</h1>"
 
 package { 'install application':
@@ -18,8 +18,11 @@ service { 'start application':
   ],
 }
 
-file { '/usr/share/nginx/html/index.html':
-  ensure   => 'file',
-  content  => $content,
-  notify   => Service['start application'],
+if $osfamily == 'Redhat' {
+  file { '/usr/share/nginx/html/index.html':
+    ensure   => 'file',
+    content  => $content,
+    notify   => Service['start application'],
+  }
 }
+
